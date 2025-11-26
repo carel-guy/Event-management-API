@@ -1,0 +1,135 @@
+<mjml>
+  <mj-head>
+    <mj-title>Waangu Events - You've been tagged in a review!</mj-title>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Inter, sans-serif" />
+      <mj-text font-size="16px" line-height="1.6" color="#333333" />
+      <mj-section padding="0" />
+    </mj-attributes>
+    <mj-style>
+      .container {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      }
+      .review-card {
+        background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+        border-left: 4px solid #10B981;
+      }
+      .highlight-text {
+        background: linear-gradient(120deg, #EF4444 0%, #DC2626 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#F9FAFB">
+   
+
+    <mj-wrapper border="1px solid #E5E7EB" border-radius="16px" background-color="#FFFFFF" padding="0" css-class="container">
+
+      <!-- Hero Header Section -->
+      <mj-section background-color="#6366F1" padding="50px 20px">
+        <mj-column>
+          <mj-text align="center" font-size="36px" font-weight="bold" color="#FFFFFF" line-height="1.2">
+            You've Been Tagged!
+          </mj-text>
+          <mj-text align="center" font-size="20px" color="#E0E7FF" padding-top="10px" font-weight="500">
+            Someone mentioned you in their review
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- Main Content -->
+      <mj-section padding="45px 30px 20px">
+        <mj-column>
+          <mj-text font-size="24px" font-weight="600" color="#111827" line-height="1.3">
+            Hello {{speakerName}},
+          </mj-text>
+          <mj-text padding-top="20px" font-size="17px" color="#374151">
+            Great news! You've been mentioned in a review for your session. Here are the details:
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- Session Info Card -->
+      <mj-section padding="0 30px 25px">
+        <mj-column background-color="#F8FAFC" border-radius="12px" border="1px solid #E2E8F0" padding="25px">
+          <mj-text font-size="14px" font-weight="600" color="#6366F1" text-transform="uppercase" letter-spacing="1px">
+            SESSION
+          </mj-text>
+          <mj-text font-size="20px" font-weight="700" color="#1F2937" padding-top="8px" line-height="1.4">
+            "{{sessionTitle}}"
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- Review Card -->
+      <mj-section padding="0 30px 30px">
+        <mj-column background-color="#FEFEFE" border-radius="16px" border="1px solid #E5E7EB" padding="30px" css-class="review-card">
+          <!-- Reviewer Info -->
+          <mj-text font-size="14px" font-weight="600" color="#059669" text-transform="uppercase" letter-spacing="1px">
+            REVIEWER
+          </mj-text>
+          <mj-text font-size="18px" font-weight="600" color="#1F2937" padding-top="5px">
+            {{reviewerName}}
+          </mj-text>
+          
+          <!-- Comment Section -->
+          <mj-text font-size="14px" font-weight="600" color="#059669" text-transform="uppercase" letter-spacing="1px" padding-top="25px">
+            THEIR COMMENT
+          </mj-text>
+                    <mj-table css-class="comment-box" padding-top="12px">
+            <tr>
+              <td style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:8px; padding:20px; font-style:italic; font-size:17px; line-height:1.7; color:#374151;">
+                "{{comment}}"
+              </td>
+            </tr>
+          </mj-table>
+        </mj-column>
+      </mj-section>
+
+      <!-- Thank You Section -->
+      <mj-section padding="0 30px 40px">
+        <mj-column>
+          <mj-text align="center" font-size="18px" font-weight="600" color="#1F2937" line-height="1.5">
+            🎉 Thank you for your amazing contribution to the event!
+          </mj-text>
+          <mj-text align="center" font-size="16px" color="#6B7280" padding-top="10px">
+            Reviews like this help us recognize outstanding speakers and sessions.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- CTA Button -->
+      <mj-section padding="0 30px 40px">
+        <mj-column>
+          <mj-button href="#" background-color="#6366F1" color="#FFFFFF" font-size="16px" font-weight="600" border-radius="12px" padding="18px 30px">
+            View All Reviews
+          </mj:button>
+        </mj-column>
+      </mj-section>
+
+      <!-- Footer Section -->
+      <mj-section background-color="#F8FAFC" padding="30px" border-top="1px solid #E5E7EB">
+        <mj-column>
+          <mj-text align="center" font-size="13px" color="#6B7280" line-height="1.5">
+            You received this notification because you were tagged in a review on Waangu Events.
+          </mj-text>
+          <mj-text align="center" font-size="13px" color="#6366F1" padding-top="8px" font-weight="500">
+            &copy; 2025 Waangu Events. All rights reserved.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+    </mj-wrapper>
+
+    <!-- Bottom Spacer -->
+    <mj-section padding="40px 0">
+      <mj-column>
+        <mj-spacer height="1px" />
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>
