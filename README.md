@@ -1,99 +1,99 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+Event Management API
+====================
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API de gestion d'événements multi-tenant construite avec NestJS. Le service expose des endpoints REST documentés par Swagger et un serveur gRPC (proto `src/proto/event.proto`) pour les intégrations entre microservices. La configuration privilégie HashiCorp Vault avec un repli sur les variables d'environnement locales.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Principaux outils et services
+-----------------------------
+- NestJS 11 (TypeScript) avec pipes de validation globaux et Swagger pour la doc.
+- MongoDB + Mongoose pour la persistance multi-tenant.
+- Redis + Bull pour la file d'attente (envoi d'e-mails, tâches asynchrones).
+- Keycloak (`nest-keycloak-connect` + admin client) pour l'authentification et la gestion des rôles.
+- HashiCorp Vault pour charger la configuration sensible.
+- MinIO pour le stockage des fichiers (assets d'événement, profils).
+- gRPC (`@grpc/grpc-js`) pour l'exposition des configurations d'événement à d'autres services.
+- Nodemailer + MJML pour les e-mails transactionnels.
+- Swagger UI disponible sur `/api`.
 
-## Description
+Fonctionnalités métiers
+-----------------------
+- Gestion des événements (création, filtrage, mise à jour) avec rôles et contexte locataire.
+- Modules dédiés : assets, programmes/schedules, tarification (`tariff-rule`), champs personnalisés, documents requis, partenaires, speakers, actualités.
+- Stockage objet via MinIO avec génération d’URL signées et gestion des pièces jointes e-mail.
+- Intercepteur multi-tenant qui rattache le contexte utilisateur (ou un utilisateur fictif en dev via les en-têtes `x-temp-tenant-id` et `x-temp-user-id`).
+- Service e-mail asynchrone piloté par Bull/Redis et templates MJML.
+- Exposition gRPC du contexte utilisateur et des configurations événementielles.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Prérequis
+---------
+- Node.js 18+ et npm.
+- MongoDB accessible.
+- Redis pour Bull.
+- MinIO (ou S3 compatible).
+- Keycloak configuré (realm + client bearer-only).
+- HashiCorp Vault (sinon fichier `.env` local).
 
-## Project setup
+Configuration
+-------------
+Le service charge d'abord Vault (`VAULT_ADDR`, `VAULT_TOKEN`, `VAULT_PATH`). En cas d'échec, il lit les variables d'environnement. Exemple `.env` minimal :
 
-```bash
-$ npm install
+```
+MONGODB_URI=mongodb://localhost:27017/event-management
+REDIS_HOST=localhost
+REDIS_PORT=6379
+MINIO_ENDPOINT=localhost
+MINIO_PORT=9000
+MINIO_USE_SSL=false
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET_NAME=event-management
+KEYCLOAK_URL=http://localhost:8080
+KEYCLOAK_REALM=event-platform
+KEYCLOAK_CLIENT_ID=event-service
+KEYCLOAK_CLIENT_SECRET=xxxx
+KEYCLOAK_ADMIN_USER=admin
+KEYCLOAK_ADMIN_PASSWORD=admin
+GMAIL_USER=xxx@gmail.com
+GMAIL_PASS=xxxx
+APP_HOST=0.0.0.0
+APP_PORT=3000
+EVENT_SERVICE_URL=0.0.0.0:50051
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+Installation
+------------
+```
+npm install
 ```
 
-## Run tests
+Démarrage
+---------
+```
+# Mode développement (REST + gRPC)
+npm run start:dev
 
-```bash
-# unit tests
-$ npm run test
+# Production (compilation puis exécution)
+npm run build && npm run start:prod
+```
+Swagger : `http://APP_HOST:APP_PORT/api`  
+gRPC : `EVENT_SERVICE_URL` (voir `src/proto/event.proto`).
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+Tests et qualité
+----------------
+```
+npm run test       # unitaires
+npm run test:e2e   # end-to-end
+npm run test:cov   # couverture
+npm run lint       # ESLint
+npm run format     # Prettier
 ```
 
-## Deployment
+Notes d’utilisation
+-------------------
+- Fournir le contexte locataire/authentification via Keycloak ; en développement, les en-têtes `x-temp-tenant-id` et `x-temp-user-id` activent un contexte fictif.
+- Les fichiers sont envoyés à MinIO et référencés via `file-reference`; des URL pré-signées peuvent être générées.
+- Les e-mails utilisent Gmail SMTP ; adapter le fournisseur si nécessaire.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Licence
+-------
+UNLICENSED (voir le fichier `LICENSE`).
