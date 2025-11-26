@@ -33,33 +33,6 @@ Prérequis
 - Keycloak configuré (realm + client bearer-only).
 - HashiCorp Vault (sinon fichier `.env` local).
 
-Configuration
--------------
-Le service charge d'abord Vault (`VAULT_ADDR`, `VAULT_TOKEN`, `VAULT_PATH`). En cas d'échec, il lit les variables d'environnement. Exemple `.env` minimal :
-
-```
-MONGODB_URI=mongodb://localhost:27017/event-management
-REDIS_HOST=localhost
-REDIS_PORT=6379
-MINIO_ENDPOINT=localhost
-MINIO_PORT=9000
-MINIO_USE_SSL=false
-MINIO_ACCESS_KEY=minioadmin
-MINIO_SECRET_KEY=minioadmin
-MINIO_BUCKET_NAME=event-management
-KEYCLOAK_URL=http://localhost:8080
-KEYCLOAK_REALM=event-platform
-KEYCLOAK_CLIENT_ID=event-service
-KEYCLOAK_CLIENT_SECRET=xxxx
-KEYCLOAK_ADMIN_USER=admin
-KEYCLOAK_ADMIN_PASSWORD=admin
-GMAIL_USER=xxx@gmail.com
-GMAIL_PASS=xxxx
-APP_HOST=0.0.0.0
-APP_PORT=3000
-EVENT_SERVICE_URL=0.0.0.0:50051
-```
-
 Installation
 ------------
 ```
@@ -94,6 +67,3 @@ Notes d’utilisation
 - Les fichiers sont envoyés à MinIO et référencés via `file-reference`; des URL pré-signées peuvent être générées.
 - Les e-mails utilisent Gmail SMTP ; adapter le fournisseur si nécessaire.
 
-Licence
--------
-UNLICENSED (voir le fichier `LICENSE`).
